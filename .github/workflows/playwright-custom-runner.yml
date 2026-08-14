@@ -163,6 +163,9 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
+            - name: Setup Pages
+              uses: actions/configure-pages@v5
+
             - name: Download Merged HTML Reports
               uses: actions/download-artifact@v4
               with:
@@ -174,13 +177,13 @@ jobs:
               with:
                   path: ./_site
 
-    depoloy-report:
+    deploy-report:
         name: Deploy Report
-        if: always()
+        if: ${{ always() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && needs.build-report.result == 'success' }}
         needs: build-report
         environment:
             name: github-pages
-            url: 'https://github.com/agrawalhemant5393/PlaywrightTSDemo'
+            url: 'https://hagrawal5393.github.io/PlaywrightTestDemo/'
         runs-on: ubuntu-latest
         steps:
             - name: Deploy to GitHub Pages
